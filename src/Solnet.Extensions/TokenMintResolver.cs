@@ -1,9 +1,7 @@
 ﻿using Solnet.Extensions.TokenMint;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -21,7 +19,7 @@ namespace Solnet.Extensions
         /// <summary>
         /// The URL of the standard token list
         /// </summary>
-        private const string TOKENLIST_GITHUB_URL = "https://raw.githubusercontent.com/solana-labs/token-list/main/src/tokens/solana.tokenlist.json";
+        private const string TOKENLIST_GITHUB_URL = "https://cdn.jsdelivr.net/gh/solflare-wallet/token-list@latest/solana-tokenlist.json";
 
         /// <summary>
         /// Internal lookfor for resolving mint public key addresses to TokenDef objects.
@@ -87,9 +85,9 @@ namespace Solnet.Extensions
         /// <returns>A task that will result in an instance of the TokenMintResolver populated with Solana token list definitions.</returns>
         public static async Task<TokenMintResolver> LoadAsync(string url)
         {
-            using (var wc = new WebClient())
+            using (var wc = new HttpClient())
             {
-                var json = await wc.DownloadStringTaskAsync(url);
+                var json = await wc.GetStringAsync(url);
                 return ParseTokenList(json);
             }
         }
